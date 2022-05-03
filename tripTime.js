@@ -5,7 +5,19 @@ const tripTime = (arr) => {
         totalTime: null
     }
 
-
+    for(let i = 0; i < arr.length; i++){
+        let totDistance = arr[i].speedLimits.reduce((tot, ele) => tot + ele.distance, 0);
+        let segResult = arr[i].speedLimits.reduce((res, ele) => {
+            return {
+                avg: res.avg + (ele.distance/totDistance) * ele.speedLimit,
+                segTime: res.segTime + (ele.distance/ele.speedLimit)
+            }
+        }, {avg:0,segTime:0});
+        result.avgSpeedLimits.push(Math.round(segResult.avg));
+        result.segmentTimes.push(Math.round(segResult.segTime));
+    }
+    
+    result.totalTime = result.segmentTimes.reduce((tot,ele) => tot + ele, 0)
     return result
 }
 
@@ -102,4 +114,4 @@ const stops = [
 ]
 
 
-// tripTime(stops)
+console.log(tripTime(stops));
